@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import List, Optional, Union
-from discord.ext import commands
-from discord import ui
-import discord
+from chillycord.ext import commands
+from chillycord import ui
+import chillycord
 import enum
 
 
@@ -30,8 +30,8 @@ class FruitType(enum.Enum):
         }
         return emojis[self.value]
 
-    def as_option(self) -> discord.SelectOption:
-        return discord.SelectOption(label=self.value, emoji=self.emoji, value=self.name)
+    def as_option(self) -> chillycord.SelectOption:
+        return chillycord.SelectOption(label=self.value, emoji=self.emoji, value=self.name)
 
 
 # This is where we'll store our settings for the purpose of this example.
@@ -39,18 +39,18 @@ class FruitType(enum.Enum):
 @dataclass
 class Settings:
     fruit_type: FruitType = FruitType.apple
-    channel: Optional[discord.PartialMessageable] = None
-    members: List[Union[discord.Member, discord.User]] = field(default_factory=list)
+    channel: Optional[chillycord.PartialMessageable] = None
+    members: List[Union[chillycord.Member, chillycord.User]] = field(default_factory=list)
     count: int = 1
     silent: bool = False
 
 
 class Bot(commands.Bot):
     # Suppress error on the User attribute being None since it fills up later
-    user: discord.ClientUser
+    user: chillycord.ClientUser
 
     def __init__(self):
-        intents = discord.Intents.default()
+        intents = chillycord.Intents.default()
         super().__init__(command_prefix=commands.when_mentioned, intents=intents)
         self.settings: Settings = Settings()
 
@@ -70,7 +70,7 @@ class FruitsSetting(ui.ActionRow['SettingsView']):
             option.default = option.value == self.settings.fruit_type.name
 
     @ui.select(placeholder='Select a fruit', options=[fruit.as_option() for fruit in FruitType])
-    async def select_fruit(self, interaction: discord.Interaction[Bot], select: discord.ui.Select) -> None:
+    async def select_fruit(self, interaction: chillycord.Interaction[Bot], select: chillycord.ui.Select) -> None:
         self.settings.fruit_type = FruitType[select.values[0]]
         self.update_options()
         await interaction.response.edit_message(view=self.view)
@@ -82,23 +82,23 @@ class ChannelSetting(ui.ActionRow['SettingsView']):
         self.settings = settings
         if settings.channel is not None:
             self.select_channel.default_values = [
-                discord.SelectDefaultValue(id=settings.channel.id, type=discord.SelectDefaultValueType.channel)
+                chillycord.SelectDefaultValue(id=settings.channel.id, type=chillycord.SelectDefaultValueType.channel)
             ]
 
     @ui.select(
         placeholder='Select a channel',
-        channel_types=[discord.ChannelType.text, discord.ChannelType.public_thread],
+        channel_types=[chillycord.ChannelType.text, chillycord.ChannelType.public_thread],
         max_values=1,
         min_values=0,
         cls=ui.ChannelSelect,
     )
-    async def select_channel(self, interaction: discord.Interaction[Bot], select: ui.ChannelSelect) -> None:
+    async def select_channel(self, interaction: chillycord.Interaction[Bot], select: ui.ChannelSelect) -> None:
         if select.values:
             channel = select.values[0]
             self.settings.channel = interaction.client.get_partial_messageable(
                 channel.id, guild_id=channel.guild_id, type=channel.type
             )
-            select.default_values = [discord.SelectDefaultValue(id=channel.id, type=discord.SelectDefaultValueType.channel)]
+            select.default_values = [chillycord.SelectDefaultValue(id=channel.id, type=chillycord.SelectDefaultValueType.channel)]
         else:
             self.settings.channel = None
             select.default_values = []
@@ -113,19 +113,19 @@ class MembersSetting(ui.ActionRow['SettingsView']):
 
     def update_options(self):
         self.select_members.default_values = [
-            discord.SelectDefaultValue(id=member.id, type=discord.SelectDefaultValueType.user)
+            chillycord.SelectDefaultValue(id=member.id, type=chillycord.SelectDefaultValueType.user)
             for member in self.settings.members
         ]
 
     @ui.select(placeholder='Select members', max_values=5, min_values=0, cls=ui.UserSelect)
-    async def select_members(self, interaction: discord.Interaction[Bot], select: ui.UserSelect) -> None:
+    async def select_members(self, interaction: chillycord.Interaction[Bot], select: ui.UserSelect) -> None:
         self.settings.members = select.values
         self.update_options()
         await interaction.response.edit_message(view=self.view)
 
 
 class CountModal(ui.Modal, title='Set emoji count'):
-    count = ui.TextInput(label='Count', style=discord.TextStyle.short, default='1', required=True)
+    count = ui.TextInput(label='Count', style=chillycord.TextStyle.short, default='1', required=True)
 
     def __init__(self, view: 'SettingsView', button: SetCountButton):
         super().__init__()
@@ -133,7 +133,7 @@ class CountModal(ui.Modal, title='Set emoji count'):
         self.settings = view.settings
         self.button = button
 
-    async def on_submit(self, interaction: discord.Interaction[Bot]) -> None:
+    async def on_submit(self, interaction: chillycord.Interaction[Bot]) -> None:
         try:
             self.settings.count = int(self.count.value)
             self.button.label = str(self.settings.count)
@@ -144,10 +144,10 @@ class CountModal(ui.Modal, title='Set emoji count'):
 
 class SetCountButton(ui.Button['SettingsView']):
     def __init__(self, settings: Settings):
-        super().__init__(label=str(settings.count), style=discord.ButtonStyle.secondary)
+        super().__init__(label=str(settings.count), style=chillycord.ButtonStyle.secondary)
         self.settings = settings
 
-    async def callback(self, interaction: discord.Interaction[Bot]) -> None:
+    async def callback(self, interaction: chillycord.Interaction[Bot]) -> None:
         # Tell the type checker that a view is attached already
         assert self.view is not None
         await interaction.response.send_modal(CountModal(self.view, self))
@@ -155,19 +155,19 @@ class SetCountButton(ui.Button['SettingsView']):
 
 class NotificationToggleButton(ui.Button['SettingsView']):
     def __init__(self, settings: Settings):
-        super().__init__(label='\N{BELL}', style=discord.ButtonStyle.green)
+        super().__init__(label='\N{BELL}', style=chillycord.ButtonStyle.green)
         self.settings = settings
         self.update_button()
 
     def update_button(self):
         if self.settings.silent:
             self.label = '\N{BELL WITH CANCELLATION STROKE} Disabled'
-            self.style = discord.ButtonStyle.red
+            self.style = chillycord.ButtonStyle.red
         else:
             self.label = '\N{BELL} Enabled'
-            self.style = discord.ButtonStyle.green
+            self.style = chillycord.ButtonStyle.green
 
-    async def callback(self, interaction: discord.Interaction[Bot]) -> None:
+    async def callback(self, interaction: chillycord.Interaction[Bot]) -> None:
         self.settings.silent = not self.settings.silent
         self.update_button()
         await interaction.response.edit_message(view=self.view)
@@ -184,7 +184,7 @@ class SettingsView(ui.LayoutView):
         container = ui.Container()
         header = ui.TextDisplay('# Settings\n-# This is an example to showcase how to do settings.')
         container.add_item(header)
-        container.add_item(ui.Separator(spacing=discord.SeparatorSpacing.large))
+        container.add_item(ui.Separator(spacing=chillycord.SeparatorSpacing.large))
 
         self.count_button = SetCountButton(self.settings)
         container.add_item(
@@ -193,7 +193,7 @@ class SettingsView(ui.LayoutView):
                 accessory=self.count_button,
             )
         )
-        container.add_item(ui.Separator(spacing=discord.SeparatorSpacing.small))
+        container.add_item(ui.Separator(spacing=chillycord.SeparatorSpacing.small))
         container.add_item(
             ui.Section(
                 ui.TextDisplay(
@@ -202,7 +202,7 @@ class SettingsView(ui.LayoutView):
                 accessory=NotificationToggleButton(self.settings),
             )
         )
-        container.add_item(ui.Separator(spacing=discord.SeparatorSpacing.large))
+        container.add_item(ui.Separator(spacing=chillycord.SeparatorSpacing.large))
         container.add_item(ui.TextDisplay('## Fruit Selection\n-# This is the fruit that is shown in the message.'))
         container.add_item(FruitsSetting(self.settings))
         container.add_item(ui.TextDisplay('## Channel Selection\n-# This is the channel where the message will be sent.'))
@@ -217,8 +217,8 @@ class SettingsView(ui.LayoutView):
         self.remove_item(self.row)
         self.add_item(self.row)
 
-    @row.button(label='Finish', style=discord.ButtonStyle.green)
-    async def finish_button(self, interaction: discord.Interaction[Bot], button: ui.Button) -> None:
+    @row.button(label='Finish', style=chillycord.ButtonStyle.green)
+    async def finish_button(self, interaction: chillycord.Interaction[Bot], button: ui.Button) -> None:
         # Edit the message to make it the interaction response...
         await interaction.response.edit_message(view=self)
         # ...and then send a confirmation message.

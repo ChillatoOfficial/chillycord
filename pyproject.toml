@@ -3,20 +3,18 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "discord.py"
+name = "chillycord"
 description = "A Python wrapper for the Discord API"
 readme = { file = "README.rst", content-type = "text/x-rst" }
 license = { file = "LICENSE" }
-requires-python = ">=3.8"
-authors = [{ name = "Rapptz" }]
+requires-python = ">=3.10"
+authors = [{ name = "ChillatoOfficial" }, { name = "Rapptz (discord.py upstream)" }]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "License :: OSI Approved :: MIT License",
     "Intended Audience :: Developers",
     "Natural Language :: English",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -29,8 +27,8 @@ classifiers = [
 dynamic = ["version", "dependencies"]
 
 [project.urls]
-Documentation = "https://discordpy.readthedocs.io/en/latest/"
-"Issue tracker" = "https://github.com/Rapptz/discord.py/issues"
+Documentation = "https://github.com/Rapptz/discord.py"
+"Issue tracker" = "https://github.com/ChillatoOfficial/chillycord/issues"
 
 [tool.setuptools.dynamic]
 dependencies = { file = "requirements.txt" }
@@ -38,23 +36,8 @@ dependencies = { file = "requirements.txt" }
 [project.optional-dependencies]
 voice = [
     "PyNaCl>=1.6.0,<1.7",
-    "davey>=0.1.0"
-]
-docs = [
-    "sphinx==4.4.0",
-    "sphinxcontrib_trio==1.1.2",
-    # TODO: bump these when migrating to a newer Sphinx version
-    "sphinxcontrib-websupport==1.2.4",
-    "sphinxcontrib-applehelp==1.0.4",
-    "sphinxcontrib-devhelp==1.0.2",
-    "sphinxcontrib-htmlhelp==2.0.1",
-    "sphinxcontrib-jsmath==1.0.1",
-    "sphinxcontrib-qthelp==1.0.3",
-    "sphinxcontrib-serializinghtml==1.1.5",
-    "typing-extensions>=4.3,<5",
-    "sphinx-inline-tabs==2023.4.21",
-    # TODO: Remove this when moving to Sphinx >= 6.6
-    "imghdr-lts==1.0.0; python_version>='3.13'",
+    "davey>=0.1.0",
+    "audioop-lts; python_version>='3.13'",
 ]
 speed = [
     "orjson>=3.5.4",
@@ -79,19 +62,19 @@ dev = [
 
 [tool.setuptools]
 packages = [
-    "discord",
-    "discord.types",
-    "discord.ui",
-    "discord.webhook",
-    "discord.app_commands",
-    "discord.ext.commands",
-    "discord.ext.tasks",
+    "chillycord",
+    "chillycord.types",
+    "chillycord.ui",
+    "chillycord.webhook",
+    "chillycord.app_commands",
+    "chillycord.ext.commands",
+    "chillycord.ext.tasks",
 ]
 include-package-data = true
 
 [tool.ruff]
 line-length = 125
-extend-exclude = ["docs", "tests"]
+extend-exclude = ["tests"]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
@@ -102,8 +85,8 @@ quote-style = "single"
 
 [tool.coverage.run]
 omit = [
-    "discord/__main__.py",
-    "discord/types/*",
+    "chillycord/__main__.py",
+    "chillycord/types/*",
     "*/_types.py",
 ]
 
@@ -115,23 +98,22 @@ exclude_lines = [
 
 [tool.pyright]
 include = [
-    "discord",
-    "discord/app_commands",
-    "discord/types",
-    "discord/ui",
-    "discord/ext",
-    "discord/ext/commands",
-    "discord/ext/tasks",
+    "chillycord",
+    "chillycord/app_commands",
+    "chillycord/types",
+    "chillycord/ui",
+    "chillycord/ext",
+    "chillycord/ext/commands",
+    "chillycord/ext/tasks",
 ]
 exclude = [
     "**/__pycache__",
     "build",
     "dist",
-    "docs",
 ]
 reportUnnecessaryTypeIgnoreComment = "warning"
 reportUnusedImport = "error"
-pythonVersion = "3.8"
+pythonVersion = "3.10"
 typeCheckingMode = "basic"
 
 [tool.pytest.ini_options]

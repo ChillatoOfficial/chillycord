@@ -24,16 +24,16 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import discord
+import chillycord
 import pytest
 
 
 def test_button_init():
-    button = discord.ui.Button(
+    button = chillycord.ui.Button(
         label="Click me!",
     )
     assert button.label == "Click me!"
-    assert button.style == discord.ButtonStyle.secondary
+    assert button.style == chillycord.ButtonStyle.secondary
     assert button.disabled == False
     assert button.url == None
     assert button.emoji == None
@@ -41,28 +41,28 @@ def test_button_init():
 
 
 def test_button_with_sku_id():
-    button = discord.ui.Button(
+    button = chillycord.ui.Button(
         label="Click me!",
         sku_id=1234567890,
     )
     assert button.label == "Click me!"
-    assert button.style == discord.ButtonStyle.premium
+    assert button.style == chillycord.ButtonStyle.premium
     assert button.sku_id == 1234567890
 
 
 def test_button_with_url():
-    button = discord.ui.Button(
+    button = chillycord.ui.Button(
         label="Click me!",
         url="https://example.com",
     )
     assert button.label == "Click me!"
-    assert button.style == discord.ButtonStyle.link
+    assert button.style == chillycord.ButtonStyle.link
     assert button.url == "https://example.com"
 
 
 def test_mix_both_custom_id_and_url():
     with pytest.raises(TypeError):
-        discord.ui.Button(
+        chillycord.ui.Button(
             label="Click me!",
             url="https://example.com",
             custom_id="test",
@@ -71,7 +71,7 @@ def test_mix_both_custom_id_and_url():
 
 def test_mix_both_custom_id_and_sku_id():
     with pytest.raises(TypeError):
-        discord.ui.Button(
+        chillycord.ui.Button(
             label="Click me!",
             sku_id=1234567890,
             custom_id="test",
@@ -80,7 +80,7 @@ def test_mix_both_custom_id_and_sku_id():
 
 def test_mix_both_url_and_sku_id():
     with pytest.raises(TypeError):
-        discord.ui.Button(
+        chillycord.ui.Button(
             label="Click me!",
             url="https://example.com",
             sku_id=1234567890,
@@ -88,7 +88,7 @@ def test_mix_both_url_and_sku_id():
 
 
 def test_invalid_url():
-    button = discord.ui.Button(
+    button = chillycord.ui.Button(
         label="Click me!",
     )
     with pytest.raises(TypeError):
@@ -97,12 +97,12 @@ def test_invalid_url():
 
 def test_invalid_custom_id():
     with pytest.raises(TypeError):
-        discord.ui.Button(
+        chillycord.ui.Button(
             label="Click me!",
             custom_id=1234567890,  # type: ignore
         )
 
-    button = discord.ui.Button(
+    button = chillycord.ui.Button(
         label="Click me!",
     )
     with pytest.raises(TypeError):
@@ -110,7 +110,7 @@ def test_invalid_custom_id():
 
 
 def test_button_with_partial_emoji():
-    button = discord.ui.Button(
+    button = chillycord.ui.Button(
         label="Click me!",
         emoji="👍",
     )
@@ -119,8 +119,8 @@ def test_button_with_partial_emoji():
 
 
 def test_button_with_str_emoji():
-    emoji = discord.PartialEmoji(name="👍")
-    button = discord.ui.Button(
+    emoji = chillycord.PartialEmoji(name="👍")
+    button = chillycord.ui.Button(
         label="Click me!",
         emoji=emoji,
     )
@@ -130,12 +130,12 @@ def test_button_with_str_emoji():
 
 def test_button_with_invalid_emoji():
     with pytest.raises(TypeError):
-        discord.ui.Button(
+        chillycord.ui.Button(
             label="Click me!",
             emoji=-0.53,  # type: ignore
         )
 
-    button = discord.ui.Button(
+    button = chillycord.ui.Button(
         label="Click me!",
     )
     with pytest.raises(TypeError):
@@ -143,13 +143,13 @@ def test_button_with_invalid_emoji():
 
 
 def test_button_setter():
-    button = discord.ui.Button()
+    button = chillycord.ui.Button()
 
     button.label = "Click me!"
     assert button.label == "Click me!"
 
-    button.style = discord.ButtonStyle.primary
-    assert button.style == discord.ButtonStyle.primary
+    button.style = chillycord.ButtonStyle.primary
+    assert button.style == chillycord.ButtonStyle.primary
 
     button.disabled = True
     assert button.disabled == True

@@ -26,15 +26,15 @@ from __future__ import annotations
 
 from io import BytesIO
 
-import discord
+import chillycord
 import pytest
 
-from discord.http import handle_message_parameters
-from discord.webhook.async_ import interaction_message_response_params
+from chillycord.http import handle_message_parameters
+from chillycord.webhook.async_ import interaction_message_response_params
 
 
-def make_file(index: int) -> discord.File:
-    return discord.File(BytesIO(b'test'), filename=f'test-{index}.txt')
+def make_file(index: int) -> chillycord.File:
+    return chillycord.File(BytesIO(b'test'), filename=f'test-{index}.txt')
 
 
 def test_handle_message_parameters_rejects_too_many_files():

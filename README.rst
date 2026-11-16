@@ -1,15 +1,5 @@
-discord.py
+chillycord
 ==========
-
-.. image:: https://discord.com/api/guilds/336642139381301249/embed.png
-   :target: https://discord.gg/r3sSKJJ
-   :alt: Discord server invite
-.. image:: https://img.shields.io/pypi/v/discord.py.svg
-   :target: https://pypi.python.org/pypi/discord.py
-   :alt: PyPI version info
-.. image:: https://img.shields.io/pypi/pyversions/discord.py.svg
-   :target: https://pypi.python.org/pypi/discord.py
-   :alt: PyPI supported Python versions
 
 A modern, easy to use, feature-rich, and async ready API wrapper for Discord written in Python.
 
@@ -23,7 +13,7 @@ Key Features
 Installing
 ----------
 
-**Python 3.8 or higher is required**
+**Python 3.10 or higher is required**
 
 To install the library without full voice support, you can just run the following command:
 
@@ -37,28 +27,28 @@ To install the library without full voice support, you can just run the followin
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U discord.py
+    python3 -m pip install -U chillycord
 
     # Windows
-    py -3 -m pip install -U discord.py
+    py -3 -m pip install -U chillycord
 
 Otherwise to get voice support you should run the following command:
 
 .. code:: sh
 
     # Linux/macOS
-    python3 -m pip install -U "discord.py[voice]"
+    python3 -m pip install -U "chillycord[voice]"
 
     # Windows
-    py -3 -m pip install -U discord.py[voice]
+    py -3 -m pip install -U chillycord[voice]
 
 
 To install the development version, do the following:
 
 .. code:: sh
 
-    $ git clone https://github.com/Rapptz/discord.py
-    $ cd discord.py
+    $ git clone https://github.com/ChillatoOfficial/chillycord
+    $ cd chillycord
     $ python3 -m pip install -U .[voice]
 
 
@@ -70,16 +60,16 @@ Optional Packages
 Please note that when installing voice support on Linux, you must install the following packages via your favourite package manager (e.g. ``apt``, ``dnf``, etc) before running the above commands:
 
 * libffi-dev (or ``libffi-devel`` on some systems)
-* python-dev (e.g. ``python3.8-dev`` for Python 3.8)
+* python-dev (e.g. ``python3.10-dev`` for Python 3.10)
 
 Quick Example
 --------------
 
 .. code:: py
 
-    import discord
+    import chillycord
 
-    class MyClient(discord.Client):
+    class MyClient(chillycord.Client):
         async def on_ready(self):
             print('Logged on as', self.user)
 
@@ -91,7 +81,7 @@ Quick Example
             if message.content == 'ping':
                 await message.channel.send('pong')
 
-    intents = discord.Intents.default()
+    intents = chillycord.Intents.default()
     intents.message_content = True
     client = MyClient(intents=intents)
     client.run('token')
@@ -101,10 +91,10 @@ Bot Example
 
 .. code:: py
 
-    import discord
-    from discord.ext import commands
+    import chillycord
+    from chillycord.ext import commands
 
-    intents = discord.Intents.default()
+    intents = chillycord.Intents.default()
     intents.message_content = True
     bot = commands.Bot(command_prefix='>', intents=intents)
 
@@ -119,6 +109,11 @@ You can find more examples in the examples directory.
 Links
 ------
 
-- `Documentation <https://discordpy.readthedocs.io/en/latest/index.html>`_
 - `Official Discord Server <https://discord.gg/r3sSKJJ>`_
 - `Discord API <https://discord.gg/discord-api>`_
+
+
+Credits
+-------
+
+chillycord is a fork of `discord.py <https://github.com/Rapptz/discord.py>`_ by Rapptz, distributed under the MIT license (see LICENSE).

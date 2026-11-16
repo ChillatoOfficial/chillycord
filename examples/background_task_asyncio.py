@@ -1,10 +1,10 @@
-import discord
+import chillycord
 import asyncio
 
 
-class MyClient(discord.Client):
+class MyClient(chillycord.Client):
     # Suppress error on the User attribute being None since it fills up later
-    user: discord.ClientUser
+    user: chillycord.ClientUser
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -23,7 +23,7 @@ class MyClient(discord.Client):
         channel = self.get_channel(1234567)  # channel ID goes here
 
         # Tell the type checker that this is a messageable channel
-        assert isinstance(channel, discord.abc.Messageable)
+        assert isinstance(channel, chillycord.abc.Messageable)
 
         while not self.is_closed():
             counter += 1
@@ -31,5 +31,5 @@ class MyClient(discord.Client):
             await asyncio.sleep(60)  # task runs every 60 seconds
 
 
-client = MyClient(intents=discord.Intents.default())
+client = MyClient(intents=chillycord.Intents.default())
 client.run('token')

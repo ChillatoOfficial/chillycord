@@ -24,39 +24,39 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import discord
+import chillycord
 import pytest
 
 
-class DynamicButton(discord.ui.DynamicItem[discord.ui.Button], template=r'dynamic:(?P<number>[0-9]+)'):
+class DynamicButton(chillycord.ui.DynamicItem[chillycord.ui.Button], template=r'dynamic:(?P<number>[0-9]+)'):
     @classmethod
     async def from_custom_id(cls, interaction, item, match):
-        return cls(discord.ui.Button(label='Dynamic', custom_id=match.group(0)))
+        return cls(chillycord.ui.Button(label='Dynamic', custom_id=match.group(0)))
 
 
 def test_add_item_with_full_row():
-    view = discord.ui.View()
+    view = chillycord.ui.View()
 
     for i in range(5):
-        view.add_item(discord.ui.Button(label=str(i), row=0))
+        view.add_item(chillycord.ui.Button(label=str(i), row=0))
 
     with pytest.raises(ValueError):
-        view.add_item(discord.ui.Button(label="6", row=0))
+        view.add_item(chillycord.ui.Button(label="6", row=0))
 
     assert len(view.children) == 5
     assert view.total_children_count == 5
 
 
 def test_add_item_invalid():
-    view = discord.ui.View()
+    view = chillycord.ui.View()
 
     with pytest.raises(TypeError):
         view.add_item(object())  # type: ignore
 
 
 def test_remove_item():
-    view = discord.ui.View()
-    item = discord.ui.Button(label="Test")
+    view = chillycord.ui.View()
+    item = chillycord.ui.Button(label="Test")
     view.add_item(item)
 
     view.remove_item(item)
@@ -67,22 +67,22 @@ def test_remove_item():
 
 
 def test_action_row_add_item_invalid():
-    row = discord.ui.ActionRow()
+    row = chillycord.ui.ActionRow()
 
     with pytest.raises(TypeError):
         row.add_item(object())  # type: ignore
 
 
 def test_layout_view_add_item_with_too_many_children():
-    view = discord.ui.LayoutView()
+    view = chillycord.ui.LayoutView()
     max_item_limit = 40
 
     for i in range(max_item_limit - 1):
-        view.add_item(discord.ui.TextDisplay(str(i)))
+        view.add_item(chillycord.ui.TextDisplay(str(i)))
 
-    row = discord.ui.ActionRow(
-        discord.ui.Button(label="A"),
-        discord.ui.Button(label="B"),
+    row = chillycord.ui.ActionRow(
+        chillycord.ui.Button(label="A"),
+        chillycord.ui.Button(label="B"),
     )
 
     with pytest.raises(ValueError):
@@ -95,8 +95,8 @@ def test_layout_view_add_item_with_too_many_children():
 
 
 def test_section_remove_item_clears_view_and_parent():
-    view = discord.ui.LayoutView()
-    section = discord.ui.Section('test', accessory=discord.ui.Button(label='Test'))
+    view = chillycord.ui.LayoutView()
+    section = chillycord.ui.Section('test', accessory=chillycord.ui.Button(label='Test'))
     view.add_item(section)
     item = section.children[0]
 
@@ -107,9 +107,9 @@ def test_section_remove_item_clears_view_and_parent():
 
 
 def test_action_row_remove_item_clears_view_and_parent():
-    view = discord.ui.LayoutView()
-    row = discord.ui.ActionRow()
-    item = discord.ui.Button(label='Test')
+    view = chillycord.ui.LayoutView()
+    row = chillycord.ui.ActionRow()
+    item = chillycord.ui.Button(label='Test')
     row.add_item(item)
     view.add_item(row)
 
@@ -120,9 +120,9 @@ def test_action_row_remove_item_clears_view_and_parent():
 
 
 def test_container_remove_item_clears_view_and_parent():
-    view = discord.ui.LayoutView()
-    container = discord.ui.Container()
-    item = discord.ui.TextDisplay('test')
+    view = chillycord.ui.LayoutView()
+    container = chillycord.ui.Container()
+    item = chillycord.ui.TextDisplay('test')
     container.add_item(item)
     view.add_item(container)
 
@@ -136,16 +136,16 @@ def test_container_remove_item_clears_view_and_parent():
 async def test_action_row_dynamic_item_swap_preserves_parent_checks():
     calls = []
 
-    class Row(discord.ui.ActionRow):
+    class Row(chillycord.ui.ActionRow):
         async def interaction_check(self, interaction):
             calls.append('row')
             return True
 
-    base = discord.ui.Button(label='Dynamic', custom_id='dynamic:1')
+    base = chillycord.ui.Button(label='Dynamic', custom_id='dynamic:1')
     row = Row(base)
-    view = discord.ui.LayoutView()
+    view = chillycord.ui.LayoutView()
     view.add_item(row)
-    item = DynamicButton(discord.ui.Button(label='Dynamic', custom_id='dynamic:1'))
+    item = DynamicButton(chillycord.ui.Button(label='Dynamic', custom_id='dynamic:1'))
 
     row._swap_item(base, item, 'dynamic:1')
     await item._run_checks(None)
@@ -161,16 +161,16 @@ async def test_action_row_dynamic_item_swap_preserves_parent_checks():
 async def test_container_dynamic_item_swap_preserves_parent_checks():
     calls = []
 
-    class Container(discord.ui.Container):
+    class Container(chillycord.ui.Container):
         async def interaction_check(self, interaction):
             calls.append('container')
             return True
 
-    base = discord.ui.ActionRow(discord.ui.Button(label='Dynamic', custom_id='dynamic:1'))
+    base = chillycord.ui.ActionRow(chillycord.ui.Button(label='Dynamic', custom_id='dynamic:1'))
     container = Container(base)
-    view = discord.ui.LayoutView()
+    view = chillycord.ui.LayoutView()
     view.add_item(container)
-    item = DynamicButton(discord.ui.Button(label='Dynamic', custom_id='dynamic:1'))
+    item = DynamicButton(chillycord.ui.Button(label='Dynamic', custom_id='dynamic:1'))
 
     container._swap_item(base, item, 'dynamic:1')
     await item._run_checks(None)

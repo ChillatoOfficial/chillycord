@@ -1,23 +1,23 @@
 # This example requires the 'members' privileged intents
 
-import discord
+import chillycord
 
 
-class MyClient(discord.Client):
+class MyClient(chillycord.Client):
     # Suppress error on the User attribute being None since it fills up later
-    user: discord.ClientUser
+    user: chillycord.ClientUser
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.role_message_id = 0  # ID of the message that can be reacted to to add/remove a role.
         self.emoji_to_role = {
-            discord.PartialEmoji(name='🔴'): 0,  # ID of the role associated with unicode emoji '🔴'.
-            discord.PartialEmoji(name='🟡'): 0,  # ID of the role associated with unicode emoji '🟡'.
-            discord.PartialEmoji(name='green', id=0): 0,  # ID of the role associated with a partial emoji's ID.
+            chillycord.PartialEmoji(name='🔴'): 0,  # ID of the role associated with unicode emoji '🔴'.
+            chillycord.PartialEmoji(name='🟡'): 0,  # ID of the role associated with unicode emoji '🟡'.
+            chillycord.PartialEmoji(name='green', id=0): 0,  # ID of the role associated with a partial emoji's ID.
         }
 
-    async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
+    async def on_raw_reaction_add(self, payload: chillycord.RawReactionActionEvent):
         """Gives a role based on a reaction emoji."""
         # Make sure that the message the user is reacting to is the one we care about.
         if payload.message_id != self.role_message_id:
@@ -45,11 +45,11 @@ class MyClient(discord.Client):
         try:
             # Finally, add the role.
             await payload.member.add_roles(role)
-        except discord.HTTPException:
+        except chillycord.HTTPException:
             # If we want to do something in case of errors we'd do it here.
             pass
 
-    async def on_raw_reaction_remove(self, payload: discord.RawReactionActionEvent):
+    async def on_raw_reaction_remove(self, payload: chillycord.RawReactionActionEvent):
         """Removes a role based on a reaction emoji."""
         # Make sure that the message the user is reacting to is the one we care about.
         if payload.message_id != self.role_message_id:
@@ -81,12 +81,12 @@ class MyClient(discord.Client):
         try:
             # Finally, remove the role.
             await member.remove_roles(role)
-        except discord.HTTPException:
+        except chillycord.HTTPException:
             # If we want to do something in case of errors we'd do it here.
             pass
 
 
-intents = discord.Intents.default()
+intents = chillycord.Intents.default()
 intents.members = True
 
 client = MyClient(intents=intents)

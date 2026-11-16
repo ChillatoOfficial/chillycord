@@ -29,12 +29,12 @@ from functools import wraps
 import pytest
 from typing import Awaitable, TYPE_CHECKING, Callable, Coroutine, Optional, TypeVar, Any, Type, List, Union
 
-import discord
+import chillycord
 
 if TYPE_CHECKING:
 
     from typing_extensions import ParamSpec
-    from discord.types.interactions import (
+    from chillycord.types.interactions import (
         ApplicationCommandInteraction as ApplicationCommandInteractionPayload,
         ChatInputApplicationCommandInteractionData as ChatInputApplicationCommandInteractionDataPayload,
         ApplicationCommandInteractionDataOption as ApplicationCommandInteractionDataOptionPayload,
@@ -46,12 +46,12 @@ if TYPE_CHECKING:
 T = TypeVar('T')
 
 
-class MockCommandInteraction(discord.Interaction):
+class MockCommandInteraction(chillycord.Interaction):
     @classmethod
     def _get_command_options(cls, **options: str) -> List[ApplicationCommandInteractionDataOptionPayload]:
         return [
             {
-                'type': discord.AppCommandOptionType.string.value,
+                'type': chillycord.AppCommandOptionType.string.value,
                 'name': name,
                 'value': value,
             }
@@ -61,12 +61,12 @@ class MockCommandInteraction(discord.Interaction):
     @classmethod
     def _get_command_data(
         cls,
-        command: Union[discord.app_commands.Command[Any, ..., Any], discord.app_commands.Group],
+        command: Union[chillycord.app_commands.Command[Any, ..., Any], chillycord.app_commands.Group],
         options: List[ApplicationCommandInteractionDataOptionPayload],
     ) -> ChatInputApplicationCommandInteractionDataPayload:
 
         data: Union[ChatInputApplicationCommandInteractionDataPayload, ApplicationCommandInteractionDataOptionPayload] = {
-            'type': discord.AppCommandType.chat_input.value,
+            'type': chillycord.AppCommandType.chat_input.value,
             'name': command.name,
             'options': options,
         }
@@ -79,8 +79,8 @@ class MockCommandInteraction(discord.Interaction):
 
     def __init__(
         self,
-        client: discord.Client,
-        command: discord.app_commands.Command[Any, ..., Any],
+        client: chillycord.Client,
+        command: chillycord.app_commands.Command[Any, ..., Any],
         **options: str,
     ) -> None:
 
@@ -96,17 +96,17 @@ class MockCommandInteraction(discord.Interaction):
         super().__init__(data=data, state=client._connection)
 
 
-client = discord.Client(intents=discord.Intents.default())
+client = chillycord.Client(intents=chillycord.Intents.default())
 
 
-class MockTree(discord.app_commands.CommandTree):
-    last_exception: Optional[discord.app_commands.AppCommandError]
+class MockTree(chillycord.app_commands.CommandTree):
+    last_exception: Optional[chillycord.app_commands.AppCommandError]
 
-    async def _call(self, interaction: discord.Interaction) -> None:
+    async def _call(self, interaction: chillycord.Interaction) -> None:
         self.last_exception = None
         return await super()._call(interaction)
 
-    async def on_error(self, interaction: discord.Interaction, error: discord.app_commands.AppCommandError) -> None:
+    async def on_error(self, interaction: chillycord.Interaction, error: chillycord.app_commands.AppCommandError) -> None:
         self.last_exception = error
 
 
@@ -114,7 +114,7 @@ tree = MockTree(client)
 
 
 @tree.command()
-async def test_command(interaction: discord.Interaction, foo: str) -> None:
+async def test_command(interaction: chillycord.Interaction, foo: str) -> None:
     pass
 
 
@@ -128,22 +128,22 @@ def wrapper(func: Callable[P, Awaitable[T]]) -> Callable[P, Coroutine[Any, Any, 
 
 @tree.command()
 @wrapper
-async def test_wrapped_command(interaction: discord.Interaction, foo: str) -> None:
+async def test_wrapped_command(interaction: chillycord.Interaction, foo: str) -> None:
     pass
 
 
 @tree.command()
-async def test_command_raises(interaction: discord.Interaction, foo: str) -> None:
+async def test_command_raises(interaction: chillycord.Interaction, foo: str) -> None:
     raise TypeError
 
 
 @tree.command()
 @wrapper
-async def test_wrapped_command_raises(interaction: discord.Interaction, foo: str) -> None:
+async def test_wrapped_command_raises(interaction: chillycord.Interaction, foo: str) -> None:
     raise TypeError
 
 
-group = discord.app_commands.Group(name='group', description='...')
+group = chillycord.app_commands.Group(name='group', description='...')
 test_subcommand = group.command()(test_command.callback)
 test_wrapped_subcommand = group.command()(test_wrapped_command.callback)
 test_subcommand_raises = group.command()(test_command_raises.callback)
@@ -166,7 +166,7 @@ tree.add_command(group)
 )
 @pytest.mark.asyncio
 async def test_valid_command_invoke(
-    command: discord.app_commands.Command[Any, ..., Any], raises: Optional[Type[BaseException]]
+    command: chillycord.app_commands.Command[Any, ..., Any], raises: Optional[Type[BaseException]]
 ):
     interaction = MockCommandInteraction(client, command, foo='foo')
     await tree._call(interaction)
@@ -174,7 +174,7 @@ async def test_valid_command_invoke(
     if raises is None:
         assert tree.last_exception is None
     else:
-        assert isinstance(tree.last_exception, discord.app_commands.CommandInvokeError)
+        assert isinstance(tree.last_exception, chillycord.app_commands.CommandInvokeError)
         assert isinstance(tree.last_exception.original, raises)
 
 
@@ -192,8 +192,8 @@ async def test_valid_command_invoke(
     ],
 )
 @pytest.mark.asyncio
-async def test_invalid_command_invoke(command: discord.app_commands.Command[Any, ..., Any]):
+async def test_invalid_command_invoke(command: chillycord.app_commands.Command[Any, ..., Any]):
     interaction = MockCommandInteraction(client, command, bar='bar')
     await tree._call(interaction)
 
-    assert isinstance(tree.last_exception, discord.app_commands.CommandSignatureMismatch)
+    assert isinstance(tree.last_exception, chillycord.app_commands.CommandSignatureMismatch)

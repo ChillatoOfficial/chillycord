@@ -1,16 +1,16 @@
 # This example requires the 'message_content' privileged intent to function.
 
-from discord.ext import commands
+from chillycord.ext import commands
 
-import discord
+import chillycord
 
 
 class CounterBot(commands.Bot):
     # Suppress error on the User attribute being None since it fills up later
-    user: discord.ClientUser
+    user: chillycord.ClientUser
 
     def __init__(self):
-        intents = discord.Intents.default()
+        intents = chillycord.Intents.default()
         intents.message_content = True
 
         super().__init__(command_prefix=commands.when_mentioned_or('$'), intents=intents)
@@ -21,16 +21,16 @@ class CounterBot(commands.Bot):
 
 
 # Define a simple View that gives us a counter button
-class Counter(discord.ui.View):
+class Counter(chillycord.ui.View):
     # Define the actual button
     # When pressed, this increments the number displayed until it hits 5.
     # When it hits 5, the counter button is disabled and it turns green.
     # note: The name of the function does not matter to the library
-    @discord.ui.button(label='0', style=discord.ButtonStyle.red)
-    async def count(self, interaction: discord.Interaction, button: discord.ui.Button):
+    @chillycord.ui.button(label='0', style=chillycord.ButtonStyle.red)
+    async def count(self, interaction: chillycord.Interaction, button: chillycord.ui.Button):
         number = int(button.label) if button.label else 0
         if number + 1 >= 5:
-            button.style = discord.ButtonStyle.green
+            button.style = chillycord.ButtonStyle.green
             button.disabled = True
         button.label = str(number + 1)
 

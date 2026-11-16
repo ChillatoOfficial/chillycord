@@ -1,13 +1,13 @@
 # This example requires the 'message_content' privileged intent to function.
 
-import discord
+import chillycord
 import random
 import asyncio
 
 
-class MyClient(discord.Client):
+class MyClient(chillycord.Client):
     # Suppress error on the User attribute being None since it fills up later
-    user: discord.ClientUser
+    user: chillycord.ClientUser
 
     async def on_ready(self):
         print(f'Logged in as {self.user} (ID: {self.user.id})')
@@ -37,7 +37,7 @@ class MyClient(discord.Client):
                 await message.channel.send(f'Oops. It is actually {answer}.')
 
 
-intents = discord.Intents.default()
+intents = chillycord.Intents.default()
 intents.message_content = True
 
 client = MyClient(intents=intents)

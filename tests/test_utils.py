@@ -2,7 +2,7 @@
 
 """
 
-Tests for discord.utils
+Tests for chillycord.utils
 
 """
 
@@ -16,7 +16,7 @@ import typing
 
 import pytest
 
-from discord import utils
+from chillycord import utils
 
 
 # Async generator for async support

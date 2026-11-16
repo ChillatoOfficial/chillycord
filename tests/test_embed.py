@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import datetime
 
-import discord
+import chillycord
 import pytest
 
 
@@ -35,15 +35,15 @@ import pytest
     [
         ('title', 'description', 0xABCDEF, 'https://example.com'),
         ('title', 'description', 0xFF1294, None),
-        ('title', 'description', discord.Colour(0x333D8F), 'https://example.com'),
-        ('title', 'description', discord.Colour(0x44243B), None),
+        ('title', 'description', chillycord.Colour(0x333D8F), 'https://example.com'),
+        ('title', 'description', chillycord.Colour(0x44243B), None),
     ],
 )
 def test_embed_initialization(title, description, colour, url):
-    embed = discord.Embed(title=title, description=description, colour=colour, url=url)
+    embed = chillycord.Embed(title=title, description=description, colour=colour, url=url)
     assert embed.title == title
     assert embed.description == description
-    assert embed.colour == colour or embed.colour == discord.Colour(colour)
+    assert embed.colour == colour or embed.colour == chillycord.Colour(colour)
     assert embed.url == url
 
 
@@ -57,14 +57,14 @@ def test_embed_initialization(title, description, colour, url):
     ],
 )
 def test_embed_set_footer(text, icon_url):
-    embed = discord.Embed()
+    embed = chillycord.Embed()
     embed.set_footer(text=text, icon_url=icon_url)
     assert embed.footer.text == text
     assert embed.footer.icon_url == icon_url
 
 
 def test_embed_remove_footer():
-    embed = discord.Embed()
+    embed = chillycord.Embed()
     embed.set_footer(text='Hello discord.py', icon_url='https://example.com')
     embed.remove_footer()
     assert embed.footer.text is None
@@ -80,7 +80,7 @@ def test_embed_remove_footer():
     ],
 )
 def test_embed_set_author(name, url, icon_url):
-    embed = discord.Embed()
+    embed = chillycord.Embed()
     embed.set_author(name=name, url=url, icon_url=icon_url)
     assert embed.author.name == name
     assert embed.author.url == url
@@ -88,7 +88,7 @@ def test_embed_set_author(name, url, icon_url):
 
 
 def test_embed_remove_author():
-    embed = discord.Embed()
+    embed = chillycord.Embed()
     embed.set_author(name='Rapptz', url='http://example.com', icon_url='http://example.com/icon.png')
     embed.remove_author()
     assert embed.author.name is None
@@ -104,7 +104,7 @@ def test_embed_remove_author():
     ],
 )
 def test_embed_set_thumbnail(thumbnail):
-    embed = discord.Embed()
+    embed = chillycord.Embed()
     embed.set_thumbnail(url=thumbnail)
     assert embed.thumbnail.url == thumbnail
 
@@ -117,7 +117,7 @@ def test_embed_set_thumbnail(thumbnail):
     ],
 )
 def test_embed_set_image(image):
-    embed = discord.Embed()
+    embed = chillycord.Embed()
     embed.set_image(url=image)
     assert embed.image.url == image
 
@@ -130,7 +130,7 @@ def test_embed_set_image(image):
     ],
 )
 def test_embed_add_field(name, value, inline):
-    embed = discord.Embed()
+    embed = chillycord.Embed()
     embed.add_field(name=name, value=value, inline=inline)
     assert len(embed.fields) == 1
     assert embed.fields[0].name == name
@@ -139,7 +139,7 @@ def test_embed_add_field(name, value, inline):
 
 
 def test_embed_insert_field():
-    embed = discord.Embed()
+    embed = chillycord.Embed()
     embed.add_field(name='name', value='value', inline=True)
     embed.insert_field_at(0, name='name 2', value='value 2', inline=False)
     assert embed.fields[0].name == 'name 2'
@@ -148,7 +148,7 @@ def test_embed_insert_field():
 
 
 def test_embed_set_field_at():
-    embed = discord.Embed()
+    embed = chillycord.Embed()
     embed.add_field(name='name', value='value', inline=True)
     embed.set_field_at(0, name='name 2', value='value 2', inline=False)
     assert embed.fields[0].name == 'name 2'
@@ -157,13 +157,13 @@ def test_embed_set_field_at():
 
 
 def test_embed_set_field_at_failure():
-    embed = discord.Embed()
+    embed = chillycord.Embed()
     with pytest.raises(IndexError):
         embed.set_field_at(0, name='name', value='value', inline=True)
 
 
 def test_embed_clear_fields():
-    embed = discord.Embed()
+    embed = chillycord.Embed()
     embed.add_field(name="field 1", value="value 1", inline=False)
     embed.add_field(name="field 2", value="value 2", inline=False)
     embed.add_field(name="field 3", value="value 3", inline=False)
@@ -172,7 +172,7 @@ def test_embed_clear_fields():
 
 
 def test_embed_remove_field():
-    embed = discord.Embed()
+    embed = chillycord.Embed()
     embed.add_field(name='name', value='value', inline=True)
     embed.remove_field(0)
     assert len(embed.fields) == 0
@@ -186,7 +186,7 @@ def test_embed_remove_field():
     ],
 )
 def test_embed_copy(title, description, url):
-    embed = discord.Embed(title=title, description=description, url=url)
+    embed = chillycord.Embed(title=title, description=description, url=url)
     embed_copy = embed.copy()
 
     assert embed == embed_copy
@@ -203,7 +203,7 @@ def test_embed_copy(title, description, url):
     ],
 )
 def test_embed_len(title, description):
-    embed = discord.Embed(title=title, description=description)
+    embed = chillycord.Embed(title=title, description=description)
     assert len(embed) == len(title) + len(description)
 
 
@@ -221,7 +221,7 @@ def test_embed_len(title, description):
     ],
 )
 def test_embed_len_with_options(title, description, fields, footer, author):
-    embed = discord.Embed(title=title, description=description)
+    embed = chillycord.Embed(title=title, description=description)
     for name, value in fields:
         embed.add_field(name=name, value=value)
     embed.set_footer(text=footer)
@@ -233,7 +233,7 @@ def test_embed_len_with_options(title, description, fields, footer, author):
 
 def test_embed_to_dict():
     timestamp = datetime.datetime.now(datetime.timezone.utc)
-    embed = discord.Embed(title="Test Title", description="Test Description", timestamp=timestamp)
+    embed = chillycord.Embed(title="Test Title", description="Test Description", timestamp=timestamp)
     data = embed.to_dict()
     assert data['title'] == "Test Title"
     assert data['description'] == "Test Description"
@@ -248,7 +248,7 @@ def test_embed_from_dict():
         'color': 0x00FF00,
         'timestamp': '2024-07-03T12:34:56+00:00',
     }
-    embed = discord.Embed.from_dict(data)
+    embed = chillycord.Embed.from_dict(data)
     assert embed.title == 'Test Title'
     assert embed.description == 'Test Description'
     assert embed.url == 'http://example.com'
@@ -264,7 +264,7 @@ def test_embed_from_dict():
     ],
 )
 def test_embed_colour_setter_failure(value):
-    embed = discord.Embed()
+    embed = chillycord.Embed()
     with pytest.raises(TypeError):
         embed.colour = value
 
@@ -276,5 +276,5 @@ def test_embed_colour_setter_failure(value):
     ]
 )
 def test_embed_truthiness(title: str, return_val: bool) -> None:
-    embed = discord.Embed(title=title)
+    embed = chillycord.Embed(title=title)
     assert bool(embed) is return_val

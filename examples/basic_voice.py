@@ -2,10 +2,10 @@
 
 import asyncio
 
-import discord
+import chillycord
 import youtube_dl
 
-from discord.ext import commands
+from chillycord.ext import commands
 
 # Suppress noise about console usage from errors
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -28,7 +28,7 @@ ytdl_format_options = {
 ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 
 
-class YTDLSource(discord.PCMVolumeTransformer):
+class YTDLSource(chillycord.PCMVolumeTransformer):
     def __init__(self, source, *, data, volume=0.5):
         super().__init__(source, volume)
 
@@ -47,7 +47,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
             data = data['entries'][0]
 
         filename = data['url'] if stream else ytdl.prepare_filename(data)
-        return cls(discord.FFmpegPCMAudio(filename, options='-vn'), data=data)
+        return cls(chillycord.FFmpegPCMAudio(filename, options='-vn'), data=data)
 
 
 class Music(commands.Cog):
@@ -55,7 +55,7 @@ class Music(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def join(self, ctx, *, channel: discord.VoiceChannel):
+    async def join(self, ctx, *, channel: chillycord.VoiceChannel):
         """Joins a voice channel"""
 
         if ctx.voice_client is not None:
@@ -67,7 +67,7 @@ class Music(commands.Cog):
     async def play(self, ctx, *, query):
         """Plays a file from the local filesystem"""
 
-        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
+        source = chillycord.PCMVolumeTransformer(chillycord.FFmpegPCMAudio(query))
         ctx.voice_client.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
 
         await ctx.send(f'Now playing: {query}')
@@ -122,7 +122,7 @@ class Music(commands.Cog):
             ctx.voice_client.stop()
 
 
-intents = discord.Intents.default()
+intents = chillycord.Intents.default()
 intents.message_content = True
 
 bot = commands.Bot(

@@ -1,17 +1,17 @@
 from __future__ import annotations
 
-from discord.ext import commands
-from discord import ui
-import discord
+from chillycord.ext import commands
+from chillycord import ui
+import chillycord
 import aiohttp
 
 
 class Bot(commands.Bot):
     # Suppress error on the User attribute being None since it fills up later
-    user: discord.ClientUser
+    user: chillycord.ClientUser
 
     def __init__(self):
-        intents = discord.Intents.default()
+        intents = chillycord.Intents.default()
         super().__init__(command_prefix=commands.when_mentioned, intents=intents)
 
     async def setup_hook(self) -> None:
@@ -41,27 +41,27 @@ class EmbedChangeButtons(ui.ActionRow):
         self.__view = view
         super().__init__()
 
-    @ui.button(label='New Image', style=discord.ButtonStyle.gray)
-    async def new_image(self, interaction: discord.Interaction[Bot], button: discord.ui.Button) -> None:
+    @ui.button(label='New Image', style=chillycord.ButtonStyle.gray)
+    async def new_image(self, interaction: chillycord.Interaction[Bot], button: chillycord.ui.Button) -> None:
         url = await interaction.client.get_random_dog_image()
         self.__view.thumbnail.media.url = url
         await interaction.response.edit_message(view=self.__view)
 
-    @ui.button(label='Change Text', style=discord.ButtonStyle.primary)
-    async def change_text(self, interaction: discord.Interaction[Bot], button: discord.ui.Button) -> None:
+    @ui.button(label='Change Text', style=chillycord.ButtonStyle.primary)
+    async def change_text(self, interaction: chillycord.Interaction[Bot], button: chillycord.ui.Button) -> None:
         await interaction.response.send_modal(ChangeTextModal(self.__view))
 
 
 # This is a simple modal to allow the content of the text portion of the "embed" to be changed by the user.
 class ChangeTextModal(ui.Modal, title='Change Text'):
-    new_text = ui.TextInput(label='The new text', style=discord.TextStyle.long)
+    new_text = ui.TextInput(label='The new text', style=chillycord.TextStyle.long)
 
     def __init__(self, view: 'EmbedLikeView') -> None:
         self.__view = view
         self.new_text.default = view.random_text.content
         super().__init__()
 
-    async def on_submit(self, interaction: discord.Interaction, /) -> None:
+    async def on_submit(self, interaction: chillycord.Interaction, /) -> None:
         self.__view.random_text.content = str(self.new_text.value)
         await interaction.response.edit_message(view=self.__view)
         self.stop()
@@ -106,7 +106,7 @@ class EmbedLikeView(ui.LayoutView):
         # If you want the "embed" to have multiple images you can add a MediaGallery item
         # to the container as well, which lets you have up to 10 images in a grid-like gallery.
 
-        container = ui.Container(self.section, self.buttons, accent_color=discord.Color.blurple())
+        container = ui.Container(self.section, self.buttons, accent_color=chillycord.Color.blurple())
         self.add_item(container)
 
 

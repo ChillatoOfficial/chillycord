@@ -24,13 +24,13 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import discord
+import chillycord
 import pytest
 
 
 @pytest.mark.asyncio
 async def test_add_option():
-    select = discord.ui.Select()
+    select = chillycord.ui.Select()
 
     for i in range(1, 25 + 1):
         select.add_option(label=str(i), value=str(i))

@@ -24,13 +24,13 @@ DEALINGS IN THE SOFTWARE.
 
 from __future__ import annotations
 
-import discord
+import chillycord
 import pytest
 
 
 @pytest.mark.asyncio
 async def test_modal_init():
-    modal = discord.ui.Modal(
+    modal = chillycord.ui.Modal(
         title="Temp Title",
     )
     assert modal.title == "Temp Title"
@@ -40,14 +40,14 @@ async def test_modal_init():
 @pytest.mark.asyncio
 async def test_no_title():
     with pytest.raises(ValueError) as excinfo:
-        discord.ui.Modal()
+        chillycord.ui.Modal()
 
     assert str(excinfo.value) == "Modal must have a title"
 
 
 @pytest.mark.asyncio
 async def test_to_dict():
-    modal = discord.ui.Modal(
+    modal = chillycord.ui.Modal(
         title="Temp Title",
     )
     data = modal.to_dict()
@@ -58,10 +58,10 @@ async def test_to_dict():
 
 @pytest.mark.asyncio
 async def test_add_item():
-    modal = discord.ui.Modal(
+    modal = chillycord.ui.Modal(
         title="Temp Title",
     )
-    item = discord.ui.TextInput(label="Test")
+    item = chillycord.ui.TextInput(label="Test")
     modal.add_item(item)
 
     assert modal.children == [item]
@@ -69,7 +69,7 @@ async def test_add_item():
 
 @pytest.mark.asyncio
 async def test_add_item_invalid():
-    modal = discord.ui.Modal(
+    modal = chillycord.ui.Modal(
         title="Temp Title",
     )
     with pytest.raises(TypeError):
@@ -78,21 +78,21 @@ async def test_add_item_invalid():
 
 @pytest.mark.asyncio
 async def test_maximum_items():
-    modal = discord.ui.Modal(
+    modal = chillycord.ui.Modal(
         title="Temp Title",
     )
     max_item_limit = 5
 
     for i in range(max_item_limit):
-        modal.add_item(discord.ui.TextInput(label=f"Test {i}"))
+        modal.add_item(chillycord.ui.TextInput(label=f"Test {i}"))
 
     with pytest.raises(ValueError):
-        modal.add_item(discord.ui.TextInput(label="Test"))
+        modal.add_item(chillycord.ui.TextInput(label="Test"))
 
 
 @pytest.mark.asyncio
 async def test_modal_setters():
-    modal = discord.ui.Modal(
+    modal = chillycord.ui.Modal(
         title="Temp Title",
     )
     modal.title = "New Title"

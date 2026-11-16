@@ -1,16 +1,16 @@
 # This example requires the 'message_content' privileged intent to function.
 
-from discord.ext import commands
+from chillycord.ext import commands
 
-import discord
+import chillycord
 
 
 class Bot(commands.Bot):
     # Suppress error on the User attribute being None since it fills up later
-    user: discord.ClientUser
+    user: chillycord.ClientUser
 
     def __init__(self):
-        intents = discord.Intents.default()
+        intents = chillycord.Intents.default()
         intents.message_content = True
 
         super().__init__(command_prefix=commands.when_mentioned_or('$'), intents=intents)
@@ -21,20 +21,20 @@ class Bot(commands.Bot):
 
 
 # Define a LayoutView, which will allow us to add v2 components to it.
-class Layout(discord.ui.LayoutView):
+class Layout(chillycord.ui.LayoutView):
     # you can add any top-level component (ui.ActionRow, ui.Section, ui.Container, ui.File, etc.) here
 
-    action_row = discord.ui.ActionRow()
+    action_row = chillycord.ui.ActionRow()
 
     @action_row.button(label='Click Me!')
-    async def action_row_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def action_row_button(self, interaction: chillycord.Interaction, button: chillycord.ui.Button):
         await interaction.response.send_message('Hi!', ephemeral=True)
 
-    container = discord.ui.Container(
-        discord.ui.TextDisplay(
+    container = chillycord.ui.Container(
+        chillycord.ui.TextDisplay(
             'Click the above button to receive a **very special** message!',
         ),
-        accent_colour=discord.Colour.blurple(),
+        accent_colour=chillycord.Colour.blurple(),
     )
 
 

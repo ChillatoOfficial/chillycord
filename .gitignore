@@ -17,4 +17,4 @@ docs/crowdin.py
 /.coverage
 build/*
 uv.lock*
-pylock*.toml
+pylock*.toml.chillycord_sync
